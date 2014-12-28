@@ -13,7 +13,7 @@ import (
 
 const (
 	path    = "/Users/lander/Documents/pbo/map_altis_data_layers.pbo"
-	version = "0.0.1"
+	version = "0.1.0"
 )
 
 var pboFile *pbo.Pbo
