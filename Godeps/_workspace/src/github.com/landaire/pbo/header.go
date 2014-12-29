@@ -41,12 +41,16 @@ func (f FileEntry) Read(p []byte) (n int, err error) {
 	file := f.pbo.file
 
 	offset, err := file.Seek(0, os.SEEK_CUR)
-	if offset > f.dataOffset+int64(f.DataBlockSize) {
+	if offset >= f.dataOffset+int64(f.DataBlockSize) {
 		return 0, io.EOF
 	}
 
-	if uint32(len(p)) > f.DataBlockSize {
-		return file.Read(p[:f.DataBlockSize])
+	// If the offset in the file we're in + length of the buffer is greater than the end of the file,
+	// then instead read in fileEndOffset - currentOffset bytes
+	if offset+int64(len(p)) > f.dataOffset+int64(f.DataBlockSize) {
+		remainingBytes := (f.dataOffset + int64(f.DataBlockSize)) - offset
+
+		return file.Read(p[:remainingBytes])
 	}
 
 	return file.Read(p)
