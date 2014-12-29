@@ -12,8 +12,7 @@ import (
 )
 
 const (
-	path    = "/Users/lander/Documents/pbo/map_altis_data_layers.pbo"
-	version = "0.1.0"
+	version = "0.2.0"
 )
 
 var pboFile *pbo.Pbo
@@ -39,13 +38,8 @@ func main() {
 			Name:      "extract",
 			ShortName: "e",
 			Usage:     "Extract the PBO to the given output directory",
-			Flags: []cli.Flag{
-				cli.StringFlag{
-					Name:  "outdir, o",
-					Usage: "Output directory",
-				},
-			},
-			Before: LoadPbo,
+			Before:    LoadPbo,
+			Action:    Extract,
 		},
 		cli.Command{
 			Name:   "header",
