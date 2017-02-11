@@ -9,6 +9,8 @@ import (
 
 	"strings"
 
+	"path/filepath"
+
 	"github.com/codegangsta/cli"
 )
 
@@ -54,7 +56,18 @@ func Extract(c *cli.Context) {
 			fmt.Println("Extracting", entry.Name)
 		}
 
-		file, err := os.Create(path.Join(outdir, entry.Name))
+		outfile := path.Join(outdir, filepath.ToSlash(entry.Name))
+
+		if verbose {
+			fmt.Printf("Extract file path: %s", outfile)
+		}
+
+		err := os.MkdirAll(path.Dir(outfile), 0777)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Extract error: could not create folder %s.\nError: %s\n", path.Dir(outfile), err)
+		}
+
+		file, err := os.Create(outfile)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Extract error: could not create file %s.\nError: %s\n", entry.Name, err)
 		}
